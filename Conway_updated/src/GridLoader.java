@@ -1,7 +1,11 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.ArrayList;
 
 public class GridLoader {
 
@@ -62,8 +66,25 @@ public class GridLoader {
         }
     }
 
+
+    public static Grid loadGrid(InputStream in) throws IOException {
+        List<String> lines = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            lines.add(line);
+        }
+        return parseLines(lines);
+    }
+
+
     public static Grid loadGrid(Path file) throws IOException {
         List<String> lines = Files.readAllLines(file);
+        return parseLines(lines);
+    }
+
+
+    private static Grid parseLines(List<String> lines) {
 
         if (lines.size() < 2) {
             throw new IllegalArgumentException("Grid must have at least 2 rows, found " + lines.size() + ".");
@@ -115,6 +136,7 @@ public class GridLoader {
 
         return new Grid(alive);
     }
+
 
     public static void main(String[] args) {
         if (args.length < 1) {
